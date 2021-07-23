@@ -5,6 +5,7 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.util.CC;
 import com.massivecraft.factions.util.Placeholder;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -115,10 +116,13 @@ public enum PermissableAction {
         meta.setDisplayName(FactionsPlugin.getInstance().color(section.getString("placeholder-item.name").replace("{action}", this.name)));
         List<String> lore = section.getStringList("placeholder-item.lore");
 
-        lore = FactionsPlugin.getInstance().replacePlaceholders(lore,
-                new Placeholder("{description}", this.getDescription()),
-                new Placeholder("{action-access-color}", fme.getFaction().getPermissions().get(perm).get(this).getColor()),
-                new Placeholder("{action-access}", fme.getFaction().getPermissions().get(perm).get(this).getName()));
+        //Not sure if it's an issue I created myself, but this is a bandaid to fix /f perms NPE's
+        if(fme.getFaction().getPermissions().get(perm).get(this) != null){
+            lore = FactionsPlugin.getInstance().replacePlaceholders(lore,
+                    new Placeholder("{description}", this.getDescription()),
+                    new Placeholder("{action-access-color}", fme.getFaction().getPermissions().get(perm).get(this).getColor()),
+                    new Placeholder("{action-access}", fme.getFaction().getPermissions().get(perm).get(this).getName()));
+        }
 
         meta.setLore(FactionsPlugin.getInstance().colorList(lore));
         item.setItemMeta(meta);
