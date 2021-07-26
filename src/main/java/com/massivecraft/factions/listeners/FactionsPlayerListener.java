@@ -327,6 +327,8 @@ public class FactionsPlayerListener implements Listener {
     }
 
     private static PermissableAction GetPermissionFromUsableBlock(Material material) {
+        if (material.name().equalsIgnoreCase("DRAGON_EGG"))
+            return PermissableAction.DESTROY;
         if (material.name().contains("_BUTTON")
                 || material.name().contains("COMPARATOR")
                 || material.name().contains("PRESSURE")
